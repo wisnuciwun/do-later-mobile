@@ -1,5 +1,7 @@
 import 'package:do_later_mobile/models/note.dart';
+import 'package:do_later_mobile/screen/edit.dart';
 import 'package:do_later_mobile/widgets/card_todo.dart';
+import 'package:do_later_mobile/widgets/default_floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:do_later_mobile/utils/colors.dart';
 
@@ -38,14 +40,37 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print('');
+      floatingActionButton: DefaultFloatingButton(
+        onPressed: () async {
+          final res = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => const Edit()));
+
+          if (res != null) {
+            setState(() {
+              sampleNotes.add(Note(
+                  id: sampleNotes.length + 1,
+                  title: res[0],
+                  content: res[1],
+                  modifiedTime: DateTime.now()));
+              filteredTodo = sampleNotes;
+            });
+          }
         },
-        elevation: 10,
-        backgroundColor: Colors.grey.shade800,
-        child: Icon(Icons.add, size: 38),
+        icon: Icons.add,
       ),
+      // FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //             builder: (BuildContext context) => const Edit()));
+      //   },
+      //   elevation: 10,
+      //   backgroundColor: Colors.grey.shade800,
+      //   child: Icon(Icons.add, size: 38),
+      // ),
       backgroundColor: Colors.grey,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
@@ -53,19 +78,6 @@ class _HomeState extends State<Home> {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('Do later',
                 style: TextStyle(fontSize: 30, color: Colors.white)),
-            // IconButton(
-            //     padding: EdgeInsets.all(0),
-            //     onPressed: () {
-            //       print('');
-            //     },
-            //     icon: Container(
-            //       width: 40,
-            //       height: 40,
-            //       decoration: BoxDecoration(
-            //           color: Colors.grey.shade800.withOpacity(.8),
-            //           borderRadius: BorderRadius.circular(10)),
-            //       child: Icon(Icons.sort, color: Colors.white),
-            //     ))
           ]),
           TextField(
               onChanged: onSearchModifiedText,
