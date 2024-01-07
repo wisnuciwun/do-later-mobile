@@ -1,21 +1,27 @@
 import 'dart:math';
 
+import 'package:do_later_mobile/models/note.dart';
+import 'package:do_later_mobile/screen/edit.dart';
 import 'package:do_later_mobile/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CardTodo extends StatelessWidget {
+  final Note? data;
   final int? id;
   final DateTime dateModified;
   final String title;
   final String content;
   final dynamic onDelete;
+  final dynamic onChanges;
 
   const CardTodo(
       {required this.dateModified,
+      this.data,
       required this.title,
       required this.content,
       this.onDelete,
+      this.onChanges,
       this.id,
       super.key});
 
@@ -36,10 +42,20 @@ class CardTodo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       color: Color(randomColorGenerator()),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
+        onTap: () async {
+          final res = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => Edit(note: data)));
+
+          if (res != null) {
+            onChanges(res, id);
+          }
+        },
         trailing: IconButton(
           onPressed: () async {
             await showDialog(
@@ -47,8 +63,8 @@ class CardTodo extends StatelessWidget {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     backgroundColor: Colors.grey.shade800,
-                    icon: Icon(Icons.info, color: Colors.grey),
-                    title: Text('Are you sure want to delete?',
+                    icon: const Icon(Icons.info, color: Colors.grey),
+                    title: const Text('Are you sure want to delete?',
                         style: TextStyle(color: Colors.white)),
                     content: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -60,7 +76,7 @@ class CardTodo extends StatelessWidget {
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green),
-                              child: Text(
+                              child: const Text(
                                 'Yes',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white),
@@ -71,7 +87,7 @@ class CardTodo extends StatelessWidget {
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red),
-                              child: Text(
+                              child: const Text(
                                 'Cancel',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white),

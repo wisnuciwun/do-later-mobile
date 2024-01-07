@@ -29,9 +29,34 @@ class _HomeState extends State<Home> {
 
   void onDeleteNote(int id) {
     setState(() {
-      // Note note = filteredTodo[id];
-      // sampleNotes.remove(note);
       filteredTodo.removeAt(id);
+    });
+  }
+
+  void onChangeNotes(res, id) {
+    int originalId = sampleNotes.indexOf(filteredTodo[id]);
+
+    sampleNotes[originalId] = Note(
+        id: sampleNotes[originalId].id,
+        title: res[0],
+        content: res[1],
+        modifiedTime: DateTime.now());
+    filteredTodo[id] = Note(
+        id: sampleNotes[id].id,
+        title: res[0],
+        content: res[1],
+        modifiedTime: DateTime.now());
+    setState(() {});
+  }
+
+  void onAddNotes(res) {
+    setState(() {
+      sampleNotes.add(Note(
+          id: sampleNotes.length,
+          title: res[0],
+          content: res[1],
+          modifiedTime: DateTime.now()));
+      filteredTodo = sampleNotes;
     });
   }
 
@@ -52,14 +77,7 @@ class _HomeState extends State<Home> {
                   builder: (BuildContext context) => const Edit()));
 
           if (res != null) {
-            setState(() {
-              sampleNotes.add(Note(
-                  id: sampleNotes.length,
-                  title: res[0],
-                  content: res[1],
-                  modifiedTime: DateTime.now()));
-              filteredTodo = sampleNotes;
-            });
+            onAddNotes(res);
           }
         },
         icon: Icons.add,
@@ -68,23 +86,25 @@ class _HomeState extends State<Home> {
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
         child: Column(children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text('Do later',
-                style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white)),
-          ]),
-          SizedBox(
+          const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Do later',
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w200,
+                        color: Colors.white)),
+              ]),
+          const SizedBox(
             height: 15,
           ),
           TextField(
               onChanged: onSearchModifiedText,
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: const TextStyle(fontSize: 16, color: Colors.white),
               decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 12),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                   hintText: 'Search note...',
-                  hintStyle: TextStyle(color: Colors.grey),
+                  hintStyle: const TextStyle(color: Colors.grey),
                   prefixIcon: const Icon(Icons.search, color: Colors.grey),
                   fillColor: Colors.grey.shade800,
                   filled: true,
@@ -97,14 +117,16 @@ class _HomeState extends State<Home> {
                           const BorderSide(color: Colors.transparent)))),
           Expanded(
               child: ListView.builder(
-            padding: EdgeInsets.only(top: 30),
+            padding: const EdgeInsets.only(top: 30),
             itemCount: filteredTodo.length,
             itemBuilder: (context, index) {
               return CardTodo(
+                  data: filteredTodo[index],
                   id: index,
                   onDelete: onDeleteNote,
                   title: '${filteredTodo[index].title} \n',
                   dateModified: filteredTodo[index].modifiedTime,
+                  onChanges: (res, id) => onChangeNotes(res, id),
                   content: filteredTodo[index].content);
             },
           ))

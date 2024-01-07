@@ -1,9 +1,11 @@
+import 'package:do_later_mobile/models/note.dart';
 import 'package:do_later_mobile/screen/home.dart';
 import 'package:do_later_mobile/widgets/default_floating_button.dart';
 import 'package:flutter/material.dart';
 
 class Edit extends StatefulWidget {
-  const Edit({super.key});
+  final Note? note;
+  const Edit({this.note, super.key});
 
   @override
   State<Edit> createState() => _EditState();
@@ -12,6 +14,15 @@ class Edit extends StatefulWidget {
 class _EditState extends State<Edit> {
   TextEditingController title = TextEditingController();
   TextEditingController content = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.note != null) {
+      title.text = widget.note!.title;
+      content.text = widget.note!.content;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +41,7 @@ class _EditState extends State<Edit> {
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 IconButton(
-                    padding: EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(0),
                     onPressed: () {
                       Navigator.push(
                           context,
@@ -43,31 +54,30 @@ class _EditState extends State<Edit> {
                       decoration: BoxDecoration(
                           color: Colors.grey.shade800.withOpacity(.8),
                           borderRadius: BorderRadius.circular(10)),
-                      child: Icon(Icons.arrow_back, color: Colors.white),
+                      child: const Icon(Icons.arrow_back, color: Colors.white),
                     )),
-                Text('Edit todo',
-                    style: TextStyle(fontSize: 30, color: Colors.white)),
               ]),
               Expanded(
                   child: ListView(
                 children: [
                   TextField(
                     controller: title,
-                    style: TextStyle(color: Colors.white, fontSize: 30),
+                    style: const TextStyle(color: Colors.white, fontSize: 34),
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Fill todo title',
                         hintStyle: TextStyle(
-                            color: Colors.grey.shade400, fontSize: 30)),
+                            color: Colors.grey.shade400, fontSize: 34)),
                   ),
                   TextField(
                     controller: content,
-                    style: TextStyle(color: Colors.white, fontSize: 30),
+                    maxLines: null,
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Fill descriptions',
                         hintStyle: TextStyle(
-                            color: Colors.grey.shade400, fontSize: 30)),
+                            color: Colors.grey.shade400, fontSize: 16)),
                   )
                 ],
               ))
