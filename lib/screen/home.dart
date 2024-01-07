@@ -11,6 +11,30 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List<Note> filteredTodo = [];
+
+  void onSearchModifiedText(String searchText) {
+    filteredTodo = sampleNotes
+        .where((element) =>
+            element.content.toLowerCase().contains(searchText.toLowerCase()) ||
+            element.title.toLowerCase().contains(searchText.toLowerCase()))
+        .toList();
+  }
+
+  void onDeleteNote(int id) {
+    setState(() {
+      Note note = filteredTodo[id];
+      sampleNotes.remove(note);
+      filteredTodo.removeAt(id);
+    });
+  }
+
+  @override
+  void initState() {
+    filteredTodo = sampleNotes;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,21 +53,22 @@ class _HomeState extends State<Home> {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('Do later',
                 style: TextStyle(fontSize: 30, color: Colors.white)),
-            IconButton(
-                padding: EdgeInsets.all(0),
-                onPressed: () {
-                  print('');
-                },
-                icon: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade800.withOpacity(.8),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Icon(Icons.sort, color: Colors.white),
-                ))
+            // IconButton(
+            //     padding: EdgeInsets.all(0),
+            //     onPressed: () {
+            //       print('');
+            //     },
+            //     icon: Container(
+            //       width: 40,
+            //       height: 40,
+            //       decoration: BoxDecoration(
+            //           color: Colors.grey.shade800.withOpacity(.8),
+            //           borderRadius: BorderRadius.circular(10)),
+            //       child: Icon(Icons.sort, color: Colors.white),
+            //     ))
           ]),
           TextField(
+              onChanged: onSearchModifiedText,
               style: TextStyle(fontSize: 16, color: Colors.white),
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(vertical: 12),
@@ -65,6 +90,8 @@ class _HomeState extends State<Home> {
             itemCount: sampleNotes.length,
             itemBuilder: (context, index) {
               return CardTodo(
+                  id: index,
+                  onDelete: onDeleteNote,
                   title: '${sampleNotes[index].title} \n',
                   dateModified: sampleNotes[index].modifiedTime,
                   content: sampleNotes[index].content);

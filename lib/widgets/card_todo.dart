@@ -5,14 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CardTodo extends StatelessWidget {
+  final int? id;
   final DateTime dateModified;
   final String title;
   final String content;
+  final dynamic onDelete;
 
   const CardTodo(
       {required this.dateModified,
       required this.title,
       required this.content,
+      this.onDelete,
+      this.id,
       super.key});
 
   randomColorGenerator() {
@@ -43,7 +47,45 @@ class CardTodo extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         trailing: IconButton(
-          onPressed: () {},
+          onPressed: () async {
+            await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    backgroundColor: Colors.grey.shade800,
+                    icon: Icon(Icons.info, color: Colors.grey),
+                    title: Text('Are you sure want to delete?',
+                        style: TextStyle(color: Colors.white)),
+                    content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                onDelete(id);
+                                Navigator.pop(context, true);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green),
+                              child: Text(
+                                'Yes',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              )),
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context, false);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red),
+                              child: Text(
+                                'Cancel',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              )),
+                        ]),
+                  );
+                });
+          },
           icon: const Icon(Icons.delete),
         ),
         subtitle: Padding(
