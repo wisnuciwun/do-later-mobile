@@ -16,17 +16,21 @@ class _HomeState extends State<Home> {
   List<Note> filteredTodo = [];
 
   void onSearchModifiedText(String searchText) {
-    filteredTodo = sampleNotes
-        .where((element) =>
-            element.content.toLowerCase().contains(searchText.toLowerCase()) ||
-            element.title.toLowerCase().contains(searchText.toLowerCase()))
-        .toList();
+    setState(() {
+      filteredTodo = sampleNotes
+          .where((element) =>
+              element.content
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              element.title.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
+    });
   }
 
   void onDeleteNote(int id) {
     setState(() {
-      Note note = filteredTodo[id];
-      sampleNotes.remove(note);
+      // Note note = filteredTodo[id];
+      // sampleNotes.remove(note);
       filteredTodo.removeAt(id);
     });
   }
@@ -50,7 +54,7 @@ class _HomeState extends State<Home> {
           if (res != null) {
             setState(() {
               sampleNotes.add(Note(
-                  id: sampleNotes.length + 1,
+                  id: sampleNotes.length,
                   title: res[0],
                   content: res[1],
                   modifiedTime: DateTime.now()));
@@ -60,25 +64,20 @@ class _HomeState extends State<Home> {
         },
         icon: Icons.add,
       ),
-      // FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //             builder: (BuildContext context) => const Edit()));
-      //   },
-      //   elevation: 10,
-      //   backgroundColor: Colors.grey.shade800,
-      //   child: Icon(Icons.add, size: 38),
-      // ),
       backgroundColor: Colors.grey,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
         child: Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('Do later',
-                style: TextStyle(fontSize: 30, color: Colors.white)),
+                style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white)),
           ]),
+          SizedBox(
+            height: 15,
+          ),
           TextField(
               onChanged: onSearchModifiedText,
               style: TextStyle(fontSize: 16, color: Colors.white),
@@ -99,14 +98,14 @@ class _HomeState extends State<Home> {
           Expanded(
               child: ListView.builder(
             padding: EdgeInsets.only(top: 30),
-            itemCount: sampleNotes.length,
+            itemCount: filteredTodo.length,
             itemBuilder: (context, index) {
               return CardTodo(
                   id: index,
                   onDelete: onDeleteNote,
-                  title: '${sampleNotes[index].title} \n',
-                  dateModified: sampleNotes[index].modifiedTime,
-                  content: sampleNotes[index].content);
+                  title: '${filteredTodo[index].title} \n',
+                  dateModified: filteredTodo[index].modifiedTime,
+                  content: filteredTodo[index].content);
             },
           ))
         ]),

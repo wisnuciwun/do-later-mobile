@@ -17,6 +17,7 @@ class DefaultFloatingButton extends StatelessWidget {
       child: Icon(
         icon,
         size: 38,
+        color: Colors.white,
       ),
     );
   }

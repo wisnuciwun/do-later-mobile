@@ -1,3 +1,4 @@
+import 'package:do_later_mobile/screen/home.dart';
 import 'package:do_later_mobile/widgets/default_floating_button.dart';
 import 'package:flutter/material.dart';
 
@@ -28,12 +29,13 @@ class _EditState extends State<Edit> {
           child: Column(
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Text('Edit todo',
-                    style: TextStyle(fontSize: 30, color: Colors.white)),
                 IconButton(
                     padding: EdgeInsets.all(0),
                     onPressed: () {
-                      print('');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => const Home()));
                     },
                     icon: Container(
                       width: 40,
@@ -42,7 +44,9 @@ class _EditState extends State<Edit> {
                           color: Colors.grey.shade800.withOpacity(.8),
                           borderRadius: BorderRadius.circular(10)),
                       child: Icon(Icons.arrow_back, color: Colors.white),
-                    ))
+                    )),
+                Text('Edit todo',
+                    style: TextStyle(fontSize: 30, color: Colors.white)),
               ]),
               Expanded(
                   child: ListView(
@@ -52,16 +56,18 @@ class _EditState extends State<Edit> {
                     style: TextStyle(color: Colors.white, fontSize: 30),
                     decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Title',
-                        hintStyle: TextStyle(color: Colors.grey, fontSize: 30)),
+                        hintText: 'Fill todo title',
+                        hintStyle: TextStyle(
+                            color: Colors.grey.shade400, fontSize: 30)),
                   ),
                   TextField(
                     controller: content,
                     style: TextStyle(color: Colors.white, fontSize: 30),
                     decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Description',
-                        hintStyle: TextStyle(color: Colors.grey, fontSize: 30)),
+                        hintText: 'Fill descriptions',
+                        hintStyle: TextStyle(
+                            color: Colors.grey.shade400, fontSize: 30)),
                   )
                 ],
               ))

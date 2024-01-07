@@ -21,16 +21,10 @@ class CardTodo extends StatelessWidget {
 
   randomColorGenerator() {
     List<int> colorList = [
-      OurColors.lightBlue,
-      OurColors.paleGreen,
-      OurColors.paleYellow,
-      OurColors.beige,
-      OurColors.lightPink,
       OurColors.lightGrey,
+      OurColors.lightPink,
       OurColors.palePink,
-      OurColors.paleBlue,
       OurColors.mintGreen,
-      OurColors.paleOrange,
     ];
 
     Random random = Random();
@@ -42,8 +36,8 @@ class CardTodo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.only(bottom: 20),
-      color: randomColorGenerator(),
+      margin: EdgeInsets.only(bottom: 10),
+      color: Color(randomColorGenerator()),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         trailing: IconButton(
